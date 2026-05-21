@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product Details - RetailHub</title>
+  <meta name="description" content="View detailed product information, ratings, reviews, price, stock, and checkout options." />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wide-container animate-fade-in">
+      <a href="javascript:history.back()" class="btn btn-ghost btn-sm product-back-link"> ⬅ Back</a>
+
+      <section id="productDetailShell" class="product-detail-shell">
+        <div class="product-gallery-panel">
+          <div id="productDiscountBadge" class="product-detail-discount" style="display: none;">0% OFF</div>
+          <img id="productImage" src="/static/img/placeholder.png" alt="Product Image" class="product-detail-image" />
+        </div>
+
+        <div class="product-info-panel">
+          <div id="productBrand" class="product-detail-brand">RetailHub</div>
+          <h1 id="productTitle" class="product-detail-title">Loading product...</h1>
+
+          <div class="product-rating-row">
+            <span id="productRatingBadge" class="product-rating-badge">0.0 ★</span>
+            <span id="productReviewCount" class="product-review-count">No ratings yet</span>
+          </div>
+
+          <div class="product-price-block">
+            <div id="productPrice" class="product-detail-price">₹0.00</div>
+            <div id="productActualPrice" class="product-detail-mrp" style="display: none;">₹0.00</div>
+            <div id="productSavings" class="product-detail-savings" style="display: none;">You save ₹0.00</div>
+          </div>
+
+          <div class="product-stock-card">
+            <span>Availability</span>
+            <strong id="productStock">Checking...</strong>
+          </div>
+
+          <div class="product-action-row">
+            <button id="addToCartBtn" class="btn btn-primary btn-lg">Add to Cart</button>
+            <a href="/view-cart.html" class="btn btn-outline btn-lg">View Cart</a>
+          </div>
+        </div>
+
+        <aside class="product-buy-panel">
+          <div class="product-buy-title">Delivery & service</div>
+          <div class="product-service-row"><strong>Free delivery</strong><span>Eligible orders</span></div>
+          <div class="product-service-row"><strong>Secure payment</strong><span>Protected checkout</span></div>
+          <div class="product-service-row"><strong>Easy support</strong><span>Order help available</span></div>
+        </aside>
+      </section>
+
+      <section class="product-detail-section">
+        <h2>Description</h2>
+        <p id="productDescription" class="product-detail-description">Loading description...</p>
+      </section>
+
+      <section class="product-detail-section">
+        <div class="product-section-header">
+          <div>
+            <h2>Ratings & Reviews</h2>
+            <p id="productReviewSummary" class="text-muted">Fetching customer reviews...</p>
+          </div>
+        </div>
+        <div id="productReviewsList" class="product-reviews-list">
+          <div class="empty-state">Loading reviews...</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/customer.js"></script>
+  <script>
+    function productEscapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatMoney(value) {
+      const amount = Number(value || 0);
+      return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function renderRatingStars(rating) {
+      const rounded = Math.round((Number(rating) || 0) * 2) / 2;
+      return [1, 2, 3, 4, 5].map(star => {
+        const filled = rounded >= star;
+        return `<span class="${filled ? 'is-filled' : ''}">★</span>`;
+      }).join('');
+    }
+
+    function renderReviews(reviews) {
+      const list = document.getElementById('productReviewsList');
+      const summary = document.getElementById('productReviewSummary');
+      if (!list) return;
+
+      if (!reviews.length) {
+        list.innerHTML = '<div class="empty-state">No reviews yet. Delivered customers can rate this product from My Orders.</div>';
+        if (summary) summary.innerText = 'No customer reviews yet.';
+        return;
+      }
+
+      const avg = reviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0) / reviews.length;
+      if (summary) summary.innerText = `${avg.toFixed(1)} average from ${reviews.length} review${reviews.length === 1 ? '' : 's'}.`;
+
+      list.innerHTML = reviews.map(review => `
+        <article class="product-review-card">
+          <div class="product-review-top">
+            <div class="product-review-stars">${renderRatingStars(review.rating)}</div>
+            <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+              <strong>${Number(review.rating || 0).toFixed(1)}</strong>
+              <span class="text-muted" style="font-weight:600;">
+                ${productEscapeHtml(review.customerName || 'Verified Customer')}
+              </span>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; flex-wrap:wrap;">
+            <div style="flex:1; min-width:220px;">
+              ${review.comment ? `<p>${productEscapeHtml(review.comment)}</p>` : '<p class="text-muted">No written comment.</p>'}
+            </div>
+            ${review.reviewedAt ? `<time style="white-space:nowrap; color: var(--text-muted); font-weight:600;">${new Date(review.reviewedAt).toLocaleDateString()}</time>` : ''}
+          </div>
+        </article>
+      `).join('');
+
+    }
+
+    async function loadProductDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) {
+        document.getElementById('productTitle').innerText = 'Product not found';
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      const headers = token ? { Authorization: 'Bearer ' + token } : {};
+
+      try {
+        if (typeof updateCartBadge === 'function') await updateCartBadge();
+
+        const [productResponse, reviewsResponse] = await Promise.all([
+          fetch(`/products/${encodeURIComponent(id)}`, { headers }),
+          fetch(`/products/${encodeURIComponent(id)}/reviews`)
+        ]);
+
+        if (!productResponse.ok) throw new Error('Product not found');
+
+        const p = await productResponse.json();
+        const reviews = reviewsResponse.ok ? await reviewsResponse.json().catch(() => []) : [];
+        const rating = Number(p.averageRating) || (reviews.length ? reviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0) / reviews.length : 0);
+        const reviewCount = Number(p.reviewCount) || reviews.length || 0;
+        const hasDiscount = Number(p.actualPrice) > Number(p.price);
+
+        document.title = `${p.name} - RetailHub`;
+        document.getElementById('productTitle').innerText = p.name || 'Product';
+        document.getElementById('productBrand').innerText = p.brand || p.category || 'RetailHub';
+        document.getElementById('productDescription').innerText = p.description || 'No description available for this product.';
+        document.getElementById('productPrice').innerText = formatMoney(p.price);
+
+        const ratingBadge = document.getElementById('productRatingBadge');
+        ratingBadge.innerHTML = `${rating.toFixed(1)} <span>★</span>`;
+        ratingBadge.classList.toggle('is-empty', reviewCount === 0);
+        document.getElementById('productReviewCount').innerText = reviewCount
+          ? `${reviewCount} rating${reviewCount === 1 ? '' : 's'}`
+          : 'No ratings yet';
+
+        const actualPriceEl = document.getElementById('productActualPrice');
+        const discountEl = document.getElementById('productDiscountBadge');
+        const savingsEl = document.getElementById('productSavings');
+        if (hasDiscount) {
+          actualPriceEl.innerText = `M.R.P. ${formatMoney(p.actualPrice)}`;
+          actualPriceEl.style.display = 'block';
+          discountEl.innerText = `${p.discountPercentage || 0}% OFF`;
+          discountEl.style.display = 'inline-flex';
+          savingsEl.innerText = `You save ${formatMoney(Number(p.actualPrice) - Number(p.price))}`;
+          savingsEl.style.display = 'block';
+        }
+
+        const stockEl = document.getElementById('productStock');
+        const inStock = Number(p.stock) > 0;
+        stockEl.innerText = inStock ? `In Stock` : 'Out of Stock';
+        stockEl.style.color = inStock ? 'var(--success)' : 'var(--error)';
+
+        const imageEl = document.getElementById('productImage');
+        imageEl.src = p.imageUrl || '/static/img/placeholder.png';
+        imageEl.alt = p.name || 'Product Image';
+
+        const addBtn = document.getElementById('addToCartBtn');
+        const updateButtonState = () => {
+          if (!inStock) {
+            addBtn.disabled = true;
+            addBtn.innerText = 'Out of Stock';
+            return;
+          }
+          if (window.cartProductIds && window.cartProductIds.includes(p.id)) {
+            addBtn.disabled = false;
+            addBtn.innerText = 'Go to Cart';
+            addBtn.onclick = () => window.location.href = '/view-cart.html';
+            return;
+          }
+          addBtn.disabled = false;
+          addBtn.innerText = 'Add to Cart';
+          addBtn.onclick = () => {
+            if (!localStorage.getItem('token')) {
+              window.location.href = '/login.html';
+              return;
+            }
+            if (typeof addToCart === 'function') addToCart(p.id);
+          };
+        };
+
+        updateButtonState();
+        document.addEventListener('cartUpdated', updateButtonState);
+        renderReviews(reviews);
+      } catch (err) {
+        document.getElementById('productDetailShell').innerHTML = '<div class="empty-state">Unable to load this product.</div>';
+        document.getElementById('productReviewsList').innerHTML = '';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProductDetail);
+  </script>
+</body>
+
+</html>

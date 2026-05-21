@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventory Management - RetailHub Admin</title>
+  <meta name="description" content="View, edit, and manage all products in the RetailHub store inventory." />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/admin-home.html">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wide-container animate-fade-in">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+        <div>
+          <h1>Product Management</h1>
+          <p class="text-muted">Manage your inventory, prices, and product details.</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="/admin-home.html" class="btn btn-ghost">← Dashboard</a>
+          <a href="/add-product-admin.html" class="btn btn-primary">+ Add New Product</a>
+        </div>
+      </div>
+
+      <div class="filter-bar" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; background: var(--surface); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border); align-items: center;">
+        <div class="search-box" style="flex: 2; min-width: 250px; margin: 0;">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="adminProductSearch" placeholder="Search by name, brand, or ID..." />
+        </div>
+        
+        <select id="adminCategoryFilter" class="btn btn-ghost" style="flex: 1; min-width: 150px; height: 44px; border: 1px solid var(--border); padding: 0 1rem;">
+          <option value="all">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Home Living">Home & Living</option>
+          <option value="Beauty">Beauty & Health</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Sports">Sports</option>
+          <option value="Toys">Toys</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex: 1; min-width: 220px;">
+          <input type="number" id="adminMinPrice" placeholder="Min ₹" class="btn btn-ghost" style="width: 50%; height: 44px; border: 1px solid var(--border); text-align: left; padding: 0 0.75rem;" />
+          <span class="text-muted">to</span>
+          <input type="number" id="adminMaxPrice" placeholder="Max ₹" class="btn btn-ghost" style="width: 50%; height: 44px; border: 1px solid var(--border); text-align: left; padding: 0 0.75rem;" />
+        </div>
+
+        <select id="adminStockFilter" class="btn btn-ghost" style="flex: 1; min-width: 150px; height: 44px; border: 1px solid var(--border); padding: 0 1rem;">
+          <option value="all">All Stock Status</option>
+          <option value="in">In Stock (>10)</option>
+          <option value="low">Low Stock (≤10)</option>
+          <option value="out">Out of Stock (0)</option>
+        </select>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-container" style="border: none; box-shadow: none;">
+          <table class="responsive-card-table admin-products-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody">
+              <!-- Populated by admin-products.js -->
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 3rem;">
+                  <div class="text-muted">Loading products...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub Admin. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/admin-products.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RetailHub - Modern E-commerce Platform for Smart Shopping</title>
+  <meta name="description" content="Shop smarter with RetailHub. Discover thousands of products across fashion, electronics, and home living with fast checkout and reliable delivery." />
+  <meta name="keywords" content="ecommerce, online shopping, electronics, fashion, retailhub, smart shopping" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/">RetailHub</a>
+      
+      <nav class="nav" aria-label="Main navigation">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <nav class="site-menu" aria-label="Category menu">
+    <div class="menu-container">
+      <ul class="menu-list" id="categoryList">
+        <li><a href="#" class="active" data-category="all">For You</a></li>
+        <li><a href="#" data-category="Fashion">Fashion</a></li>
+        <li><a href="#" data-category="Electronics">Electronics</a></li>
+        <li><a href="#" data-category="Home Living">Home &amp; Living</a></li>
+        <li><a href="#" data-category="Beauty">Beauty &amp; Health</a></li>
+        <li><a href="#" data-category="Groceries">Groceries</a></li>
+        <li><a href="#" data-category="Sports">Sports</a></li>
+        <li><a href="#" data-category="Toys">Toys</a></li>
+        <li><a href="#" data-category="Accessories">Accessories</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section id="marketingHero" class="hero-section animate-fade-in" style="margin-bottom: 2rem;">
+      <div class="hero-container">
+        <div class="hero">
+          <div class="hero-badge">New Season Arrival</div>
+          <h1>Shop the Future of Retail</h1>
+          <p class="hero-subtitle">Discover curated collections, lightning-fast delivery, and unbeatable prices.</p>
+          <div class="hero-actions">
+            <a href="/signup.html" class="btn btn-primary">Join Now</a>
+            <a href="#trending" class="btn btn-outline">Explore Products</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trending" class="container wide-container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+        <div>
+          <h2>Trending Products</h2>
+          <p class="text-muted">Check out what's hot right now</p>
+        </div>
+        <a href="#" class="btn btn-ghost">View All →</a>
+      </div>
+      <div id="homeProductGrid" class="product-grid">
+        <div class="empty-state">Loading products…</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div>
+        <div class="footer-brand">RetailHub</div>
+        <p class="footer-desc">Your trusted e-commerce platform for seamless shopping and order management.</p>
+      </div>
+      <div>
+        <div class="footer-title">Shop</div>
+        <ul class="footer-links">
+          <li><a href="#">All Products</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">Featured Deals</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Account</div>
+        <ul class="footer-links">
+          <li><a href="/login.html">Sign In</a></li>
+          <li><a href="/signup.html">Register</a></li>
+          <li><a href="/my-orders.html">Order History</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 RetailHub. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/customer.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+
+</html>

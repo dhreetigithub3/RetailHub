@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard - RetailHub Management</title>
+  <meta name="description"
+    content="Manage products, users, and analyze store performance from the RetailHub Admin Dashboard." />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/admin-home.html">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wide-container animate-fade-in">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem;">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p class="text-muted">Welcome back! Manage your store operations here.</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="/add-product-admin.html" class="btn btn-primary">+ Add Product</a>
+          <a href="/add-user-admin.html" class="btn btn-secondary">+ Add User</a>
+        </div>
+      </div>
+
+      <div class="stats-bar" style="background: transparent; border: none; padding: 0; margin-bottom: 3rem;">
+        <div class="stats-container" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <div class="card" style="padding: 1.5rem;">
+            <div id="statTotalProducts" class="stat-number">-</div>
+            <div class="stat-label">Total Products</div>
+          </div>
+          <div class="card" style="padding: 1.5rem;">
+            <div id="statTotalUsers" class="stat-number">-</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+          <div class="card" style="padding: 1.5rem;">
+            <div id="statTotalDeliveredOrders" class="stat-number">-</div>
+            <div class="stat-label">Total Delivered Orders</div>
+          </div>
+          <div class="card" style="padding: 1.5rem;">
+            <div id="statTotalRevenue" class="stat-number">-</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-grid">
+        <a class="card" href="/all-products-admin.html"
+          style="text-decoration: none; color: inherit; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🛍️</div>
+          <h3>Product Management</h3>
+          <p class="text-muted">Edit, delete, and manage inventory.</p>
+          <span class="btn btn-ghost" style="margin-top: 1rem;">Manage Products</span>
+        </a>
+
+        <a class="card" href="/view-orders-admin.html"
+          style="text-decoration: none; color: inherit; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+          <h3>Order Management</h3>
+          <p class="text-muted">View and manage orders.</p>
+          <span class="btn btn-ghost" style="margin-top: 1rem;">Manage Orders</span>
+        </a>
+
+        <a class="card" href="/user-management-admin.html"
+          style="text-decoration: none; color: inherit; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+          <h3>User Management</h3>
+          <p class="text-muted">Review and manage customer accounts.</p>
+          <span class="btn btn-ghost" style="margin-top: 1rem;">Manage Users</span>
+        </a>
+
+        <a class="card" href="/reviews-manage-admin.html"
+          style="text-decoration: none; color: inherit; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
+          <h3>Review Management</h3>
+          <p class="text-muted">Moderate and manage product reviews.</p>
+          <span class="btn btn-ghost" style="margin-top: 1rem;">Manage Reviews</span>
+        </a>
+
+        <a class="card" href="/sales-reports-admin.html"
+          style="text-decoration: none; color: inherit; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+          <h3>Sales Reports</h3>
+          <p class="text-muted">View detailed performance analytics.</p>
+          <span class="btn btn-ghost" style="margin-top: 1rem;">View Reports</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub Admin Portal. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+
+</html>

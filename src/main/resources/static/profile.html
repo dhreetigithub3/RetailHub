@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Profile - RetailHub</title>
+    <meta name="description" content="View and manage your RetailHub account details and preferences." />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a class="brand" href="/">RetailHub</a>
+            <nav class="nav">
+                <!-- Managed by navbar.js -->
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="wide-container animate-fade-in" style="max-width: 700px; margin: 0 auto;">
+            <div style="margin-bottom: 2.5rem; text-align: center;">
+                <h1>My Profile</h1>
+                <p class="text-muted">Manage your personal information and account settings.</p>
+            </div>
+
+            <div class="card" style="padding: 2rem 2.5rem;">
+                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 3rem;">
+                    <div style="width: 100px; height: 100px; background: var(--primary-glow); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 800; margin-bottom: 1rem;"
+                        id="profileInitial">
+                        U
+                    </div>
+                </div>
+
+                <div style="display: grid; gap: 1rem;">
+                    <div
+                        style="display: grid; grid-template-columns: 140px 1fr; align-items: center; padding-bottom: 0.9rem; border-bottom: 1px solid var(--border-light);">
+                        <div class="text-muted"
+                            style="font-weight: 600; font-size: 0.875rem; text-transform: uppercase;">Username</div>
+                        <div id="profileUsername" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 140px 1fr; align-items: center; padding-bottom: 0.9rem; border-bottom: 1px solid var(--border-light);">
+                        <div class="text-muted"
+                            style="font-weight: 600; font-size: 0.875rem; text-transform: uppercase;">Full Name</div>
+                        <div id="profileFullName" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 140px 1fr; align-items: center; padding-bottom: 0.9rem; border-bottom: 1px solid var(--border-light);">
+                        <div class="text-muted"
+                            style="font-weight: 600; font-size: 0.875rem; text-transform: uppercase;">Mobile</div>
+                        <div id="profileMobile" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 140px 1fr; align-items: center; padding-bottom: 0.9rem; border-bottom: 1px solid var(--border-light);">
+                        <div class="text-muted"
+                            style="font-weight: 600; font-size: 0.875rem; text-transform: uppercase;">Email Address
+                        </div>
+                        <div id="profileEmail" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+
+                    <div style="padding-top: 1rem;">
+                        <div class="text-muted"
+                            style="font-weight: 600; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 1rem;">
+                            Account Management</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <a href="/edit-profile.html" class="btn btn-outline"
+                                style="justify-content: flex-start; padding: 1rem;">
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; color: var(--text);">Edit Personal Info</div>
+                                    <small class="text-muted">Name, email, password</small>
+                                </div>
+                            </a>
+                            <a href="/manage-addresses.html" class="btn btn-outline"
+                                style="justify-content: flex-start; padding: 1rem;">
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; color: var(--text);">Manage Addresses</div>
+                                    <small class="text-muted">Add or edit shipping info</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; border-top: 1px solid var(--border-light); padding-top: 2rem;">
+                    <button onclick="deleteAccount()" class="btn btn-ghost" style="color: var(--error);">Delete
+                        Account</button>
+                    <button onclick="history.back()" class="btn btn-ghost">← Go Back</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-bottom">&copy; 2026 RetailHub. All rights reserved.</div>
+    </footer>
+
+    <script src="/js/navbar.js"></script>
+    <script src="/js/profile.js"></script>
+</body>
+
+</html>

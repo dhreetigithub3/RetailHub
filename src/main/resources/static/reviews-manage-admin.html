@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - Review Management - RetailHub</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/admin-home.html">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wide-container animate-fade-in">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+        <div>
+          <h1>Review Management</h1>
+          <p class="text-muted">Moderate and manage customer product reviews.</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="/admin-home.html" class="btn btn-ghost">← Dashboard</a>
+        </div>
+      </div>
+
+      <div class="filter-bar" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; background: var(--surface); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border); align-items: center;">
+        <div class="search-box" style="flex: 2; min-width: 250px; margin: 0;">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search by customer, product, or comment..." />
+        </div>
+
+        <select id="adminStarFilter" class="btn btn-ghost" style="flex: 1; min-width: 150px; height: 44px; border: 1px solid var(--border); padding: 0 1rem;">
+          <option value="all">All Stars</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex: 1; min-width: 320px;">
+          <input type="date" id="adminStartDate" class="btn btn-ghost" style="flex: 1; height: 44px; border: 1px solid var(--border); padding: 0 0.75rem;" />
+          <span class="text-muted">to</span>
+          <input type="date" id="adminEndDate" class="btn btn-ghost" style="flex: 1; height: 44px; border: 1px solid var(--border); padding: 0 0.75rem;" />
+        </div>
+
+        <div class="admin-filters-actions" style="display: flex; gap: 0.5rem;">
+          <button id="applyFiltersBtn" class="btn btn-primary" style="height: 44px;">Apply</button>
+          <button id="clearFiltersBtn" class="btn btn-outline" style="height: 44px;">Clear</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden; margin-top: 1.5rem;">
+        <div class="table-container" style="border: none; box-shadow: none;">
+          <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 1.25rem; margin: 0;">Reviews</h2>
+            <div class="text-muted" id="resultsMeta" style="font-size: 0.875rem;">Loading...</div>
+          </div>
+          <table class="responsive-card-table admin-reviews-table" aria-label="Reviews table">
+            <thead>
+              <tr>
+                <th>Review ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Reviewed At</th>
+                <th>Moderation</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reviewsTbody">
+              <tr>
+                <td colspan="8" class="text-muted" style="text-align: center; padding: 3rem;">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-pagination" id="reviewsPagination" style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 8px; align-items: center;"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub Admin. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/reviews-admin.js"></script>
+</body>
+
+</html>

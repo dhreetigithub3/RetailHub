@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>User Management - RetailHub Admin</title>
+  <meta name="description"
+    content="Review and manage all customer and administrator accounts in the RetailHub platform." />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/admin-home.html">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wide-container animate-fade-in">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+        <div>
+          <h1>User Management</h1>
+          <p class="text-muted">View and manage all registered users on the platform.</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="/admin-home.html" class="btn btn-ghost">← Dashboard</a>
+          <a href="/add-user-admin.html" class="btn btn-primary">+ Add New User</a>
+        </div>
+      </div>
+
+      <div class="filter-bar" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; background: var(--surface); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+        <div class="search-box" style="flex: 2; min-width: 250px; margin: 0;">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="adminUserSearch" placeholder="Search by name, email, or username..." />
+        </div>
+        <select id="adminRoleFilter" class="btn btn-ghost" style="flex: 1; min-width: 150px; height: 44px; border: 1px solid var(--border); padding: 0 1rem;">
+          <option value="all">All Roles</option>
+          <option value="USER">Customers (USER)</option>
+          <option value="ADMIN">Administrators (ADMIN)</option>
+        </select>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-container" style="border: none; box-shadow: none;">
+          <table class="responsive-card-table admin-users-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userList">
+              <!-- Populated by user-management.js -->
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 3rem;">
+                  <div class="text-muted">Loading users...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub Admin. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/user-management.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Update User Profile - RetailHub Admin</title>
+  <meta name="description" content="Modify user account details, roles, and permissions in the RetailHub system." />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/admin-home.html">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container animate-fade-in" style="max-width: 500px; margin: 0px auto;">
+      <div style="margin-bottom: 2rem;">
+        <a href="/user-management-admin.html" class="btn btn-ghost btn-sm" style="margin-bottom: 1rem;">← Back to Users</a>
+        <h1>Edit Profile</h1>
+        <p class="text-muted">Update the account details for this user.</p>
+      </div>
+
+      <div class="card">
+        <form id="editUserForm">
+          <input type="hidden" id="userId" />
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="John Doe" required />
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="johndoe" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="john@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="role">User Role</label>
+            <select id="role" required>
+              <option value="USER">Customer (USER)</option>
+              <option value="ADMIN">Administrator (ADMIN)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Update User</button>
+        </form>
+        <p id="message" style="margin-top: 1rem; text-align: center;"></p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub Admin. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/user-management.js"></script>
+</body>
+
+</html>

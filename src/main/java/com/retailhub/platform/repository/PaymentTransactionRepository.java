@@ -1,0 +1,22 @@
+package com.retailhub.platform.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.retailhub.platform.entity.PaymentTransaction;
+import com.retailhub.platform.entity.User;
+
+public interface PaymentTransactionRepository extends JpaRepository<PaymentTransaction, Long> {
+    
+    List<PaymentTransaction> findByOrderUser(User user);
+
+    long countByOrderUser(User user);
+
+    @Modifying
+    @Query("DELETE FROM PaymentTransaction p WHERE p.order.id IN (SELECT o.id FROM PurchaseOrder o WHERE o.user.id = :userId)")
+    void deleteByOrderUserId(@Param("userId") Long userId);
+}

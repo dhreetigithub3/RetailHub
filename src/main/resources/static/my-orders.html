@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Order History - RetailHub</title>
+  <meta name="description"
+    content="Review your past orders, track current shipments, and view order details on RetailHub." />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a class="brand" href="/">RetailHub</a>
+      <nav class="nav">
+        <!-- Managed by navbar.js -->
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wide-container animate-fade-in">
+      <div style="margin-bottom: 2rem;">
+        <h1>My Orders</h1>
+        <p class="text-muted">Track and review your past purchases.</p>
+      </div>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-container" style="border: none; box-shadow: none;">
+          <div class="filters-container"
+            style="padding: 1.5rem; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+            <div style="flex: 1; min-width: 250px; position: relative;">
+              <span
+                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
+              <input type="text" id="orderSearchInput" placeholder="Search by product name or Order ID..."
+                class="form-control"
+                style="width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+            </div>
+
+            <select id="statusFilter" class="form-control" style="width: auto; padding: 0.5rem 1rem;">
+              <option value="">All Statuses</option>
+              <option value="SHIPPED">On the way</option>
+              <option value="DELIVERED">Delivered</option>
+              <option value="CANCELLED">Cancelled</option>
+              <option value="RETURNED">Returned</option>
+            </select>
+
+            <select id="dateFilter" class="form-control" style="width: auto; padding: 0.5rem 1rem;">
+              <option value="all">Any Date</option>
+              <option value="30">Last 30 Days</option>
+              <option value="90">Last 3 Months</option>
+              <option value="180">Last 6 Months</option>
+              <option value="365">Last Year</option>
+            </select>
+
+            <div
+              style="display: flex; gap: 0.5rem; align-items: center; background: var(--bg); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+              <span class="text-muted" style="font-size: 0.875rem; padding-left: 0.5rem;">Price:</span>
+              <input type="number" id="minPrice" placeholder="Min" class="form-control"
+                style="width: 80px; padding: 0.25rem 0.5rem; border: none; background: transparent;" min="0">
+              <span class="text-muted">-</span>
+              <input type="number" id="maxPrice" placeholder="Max" class="form-control"
+                style="width: 80px; padding: 0.25rem 0.5rem; border: none; background: transparent;" min="0">
+            </div>
+          </div>
+          <table class="responsive-card-table my-orders-table">
+            <thead>
+              <tr>
+                <th>Product(s)</th>
+                <th>Order Date</th>
+                <th>Delivered Date</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersList">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 3rem;">
+                  <div class="text-muted">You haven't placed any orders yet. <a href="/">Start shopping!</a></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <a href="/" class="btn btn-ghost">← Continue Shopping</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Order Details Modal -->
+  <div id="orderDetailsModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true"
+    aria-labelledby="modalOrderId">
+    <div class="modal-content order-details-modal" onclick="event.stopPropagation()">
+      <div id="modalLoadingState" class="order-modal-loading" style="display: none;">
+        <p class="text-muted">Loading order details…</p>
+      </div>
+
+      <div id="modalOrderContent">
+        <div class="order-details-header">
+          <div>
+            <div class="order-details-header-meta">
+              <h2 id="modalOrderId">Order #000</h2>
+              <span id="modalStatusBadge" class="order-status-badge status-pending">Pending</span>
+            </div>
+            <p id="modalOrderDate" class="text-muted" style="margin: 0; font-size: 0.95rem;">Placed on Date</p>
+            <p id="modalDeliveredDate" class="text-muted"
+              style="margin: 0.35rem 0 0 0; font-size: 0.95rem; display: none;"></p>
+          </div>
+          <button type="button" onclick="closeOrderModal()" class="btn btn-ghost modal-close-btn"
+            aria-label="Close">&times;</button>
+        </div>
+
+        <div class="order-timeline-wrap">
+          <div id="modalOrderTimeline" class="order-timeline"></div>
+        </div>
+
+        <div class="order-details-body">
+          <div class="order-details-items-col">
+            <h3 class="order-details-section-title">Order Items</h3>
+            <div id="modalOrderItems" class="order-details-items-list"></div>
+          </div>
+
+          <div class="order-details-sidebar">
+            <div class="order-details-panel">
+              <h3>Delivery Details</h3>
+              <div class="order-details-row" style="margin-bottom: 0.75rem;">
+                <span class="text-muted">Delivered on</span>
+                <span id="modalDeliveredDateDetail" style="font-weight: 600;">—</span>
+              </div>
+              <div id="modalAddressText" class="order-details-address"></div>
+            </div>
+
+            <div class="order-details-panel">
+              <h3>Payment Information</h3>
+              <div class="order-details-row">
+                <span class="text-muted">Method</span>
+                <span id="modalPaymentMethod" style="font-weight: 600;">Cash on Delivery</span>
+              </div>
+            </div>
+
+            <div class="order-details-summary">
+              <div class="order-details-row">
+                <span class="text-muted">Subtotal</span>
+                <span id="modalSubtotal" style="font-weight: 500;">₹0.00</span>
+              </div>
+              <div class="order-details-row">
+                <span class="text-muted">Shipping</span>
+                <span style="font-weight: 600; color: var(--success);">Free</span>
+              </div>
+              <div class="order-details-total">
+                <span style="font-weight: 700; font-size: 1.1rem;">Total</span>
+                <span id="modalTotalAmount">₹0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; 2026 RetailHub. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/customer.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (ensureCustomer()) {
+        loadOrders();
+      }
+    });
+  </script>
+</body>
+
+</html>
