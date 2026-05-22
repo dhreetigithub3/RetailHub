@@ -196,68 +196,99 @@ public class PaymentService {
 
     @Transactional
     public String placeCodOrder(AddressRequest addressRequest) {
+    
         User user = getCurrentUser();
+    
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
-
+    
         if (cartItems.isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
-
+    
         Address address = getOrCreateAddress(user, addressRequest);
-
+    
         BigDecimal totalAmount = BigDecimal.ZERO;
-
+    
+        // Validate stock + calculate total
         for (CartItem cartItem : cartItems) {
+    
             Product product = cartItem.getProduct();
-
+    
             if (cartItem.getQuantity() > product.getStock()) {
-                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                throw new RuntimeException(
+                        "Insufficient stock for product: "
+                                + product.getName());
             }
-
+    
             BigDecimal subtotal = product.getPrice()
                     .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
-
+    
             totalAmount = totalAmount.add(subtotal);
         }
-
-        PurchaseOrder order = new PurchaseOrder(user, totalAmount, razorpayService.getCurrency(), "PLACED", "COD");
+    
+        PurchaseOrder order = new PurchaseOrder(
+                user,
+                totalAmount,
+                razorpayService.getCurrency(),
+                "PLACED",
+                "COD"
+        );
+    
         order.setDeliveryAddress(address);
+    
         purchaseOrderRepository.save(order);
-
+    
+        List<OrderItem> orderItems = new ArrayList<>();
+    
+        // Create order items + update stock
         for (CartItem cartItem : cartItems) {
+    
             Product product = cartItem.getProduct();
-
-                OrderItem orderItem = new OrderItem(
+    
+            int updated = productRepository.decrementStockIfAvailable(
+                    product.getId(),
+                    cartItem.getQuantity());
+    
+            if (updated <= 0) {
+                throw new RuntimeException(
+                        "Insufficient stock for product: "
+                                + product.getName());
+            }
+    
+            OrderItem orderItem = new OrderItem(
                     order,
                     product,
                     cartItem.getQuantity(),
-                    product.getPrice());
-                orderItemRepository.save(orderItem);
-
-                int updated = productRepository.decrementStockIfAvailable(product.getId(), cartItem.getQuantity());
-                if (updated <= 0) {
-                throw new RuntimeException("Insufficient stock for product: " + product.getName());
-                }
+                    product.getPrice()
+            );
+    
+            orderItems.add(orderItem);
         }
-
-        paymentTransactionRepository.save(new PaymentTransaction(
-                order,
-                null,
-                null,
-                null,
-                "COD"));
-
-        List<OrderItem> savedItems = orderItemRepository.findByOrder(order);
-
-        // Send order confirmation email for COD
-        try {
-            emailService.sendOrderPlaced(order, savedItems);
-        } catch (Exception e) {
-            System.err.println("Failed to send COD order email: " + e.getMessage());
-        }
-
+    
+        // Batch save
+        orderItemRepository.saveAll(orderItems);
+    
+        paymentTransactionRepository.save(
+                new PaymentTransaction(
+                        order,
+                        null,
+                        null,
+                        null,
+                        "COD"
+                )
+        );
+    
         cartItemRepository.deleteByUser(user);
-
+    
+        // Async email
+        try {
+            emailService.sendOrderPlaced(order, orderItems);
+        } catch (Exception e) {
+            System.err.println(
+                    "Failed to send COD order email: "
+                            + e.getMessage());
+        }
+    
         return "Order placed successfully with Cash on Delivery";
     }
 
