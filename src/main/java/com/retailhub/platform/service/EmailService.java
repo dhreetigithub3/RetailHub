@@ -36,6 +36,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    @Async
     public void sendOrderPlaced(PurchaseOrder order, List<OrderItem> items) {
         if (!canSend(order))
             return;
@@ -45,6 +46,7 @@ public class EmailService {
         sendHtml(order.getUser().getEmail(), subject, html);
     }
 
+    @Async
     public void sendOrderShipped(PurchaseOrder order, List<OrderItem> items, String trackingUrl, String trackingId) {
         if (!canSend(order))
             return;
@@ -56,6 +58,7 @@ public class EmailService {
         sendHtml(order.getUser().getEmail(), subject, html);
     }
 
+    @Async
     public void sendOrderDelivered(PurchaseOrder order, List<OrderItem> items) {
         if (!canSend(order))
             return;
@@ -64,6 +67,7 @@ public class EmailService {
         sendHtml(order.getUser().getEmail(), subject, html);
     }
 
+    @Async
     public void sendOrderCancelled(PurchaseOrder order, List<OrderItem> items, String reason) {
         if (!canSend(order))
             return;
