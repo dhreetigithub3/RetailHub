@@ -81,7 +81,6 @@ public class EmailService {
                 && !order.getUser().getEmail().isBlank();
     }
 
-    @Async
     private void sendHtml(String to, String subject, String html) {
         try {
             MimeMessage msg = mailSender.createMimeMessage();
