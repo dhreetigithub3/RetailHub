@@ -13,7 +13,7 @@
     let shownAt = 0;
     let visible = false;
     let navigationInProgress = false;
-    const MAX_OPERATION_TIMEOUT = 10000; // 10 second global timeout per operation
+    const MAX_OPERATION_TIMEOUT = 20000; // 20 second global timeout per operation
 
     function ensureDOM() {
       if (document.getElementById('globalLoader')) return;
