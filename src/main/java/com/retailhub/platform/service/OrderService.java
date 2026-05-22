@@ -84,7 +84,7 @@ public class OrderService {
         // If status changed, send appropriate email
         if (!prevStatus.equalsIgnoreCase(status)) {
             try {
-                java.util.List<OrderItem> items = orderItemRepository.findByOrder(order);
+                List<OrderItem> items = orderItemRepository.findByOrder(order);
                 if ("DELIVERED".equalsIgnoreCase(status)) {
                     emailService.sendOrderDelivered(order, items);
                 } else if ("SHIPPED".equalsIgnoreCase(status)) {
