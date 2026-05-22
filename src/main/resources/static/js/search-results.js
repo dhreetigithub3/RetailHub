@@ -443,12 +443,14 @@
   // Initial load
   document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
-    const query = params.get('q');
-    fetchResults(query);
+    const query = params.get('q') || '';
+    if (query.trim() !== '') {
+        fetchResults(query);
+    }
 
     // Sync search input if it exists
     const searchInput = document.getElementById('productSearch');
-    if (searchInput && query) {
+    if (searchInput) {
       searchInput.value = query;
     }
   });

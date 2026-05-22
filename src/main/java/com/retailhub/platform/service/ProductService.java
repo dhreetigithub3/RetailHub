@@ -78,6 +78,7 @@ public class ProductService {
 	}
 
 	public List<ProductResponse> searchProducts(String query) {
+		query = query.trim();
 		return productRepository.searchProducts(query)
 				.stream()
 				.map(this::mapToResponse)

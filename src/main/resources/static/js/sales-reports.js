@@ -177,15 +177,17 @@ function renderDashboard() {
     `).join('') || `<tr><td colspan="4" style="text-align:center;">No orders found</td></tr>`;
 }
 
+const date = new Date().toISOString().split('T')[0];
 // Export Functions
 function exportToPDF() {
     const element = document.getElementById('reportContent');
     const opt = {
         margin:       0.5,
-        filename:     `sales_report_${new Date().getTime()}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+        filename:     `sales_report_${date}.pdf`,
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 3, useScroll: true, scrollY: 0 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' },
+        pageBreak:    { mode: ['avoid-all', 'css', 'legacy'] }
     };
     html2pdf().set(opt).from(element).save();
 }
@@ -225,7 +227,7 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(wb, wsItems, "Order Items");
     
     // Download
-    XLSX.writeFile(wb, `sales_report_${new Date().getTime()}.xlsx`);
+    XLSX.writeFile(wb, `sales_report_${date}.xlsx`);
 }
 
 // Event Listeners

@@ -13,13 +13,13 @@ import com.retailhub.platform.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	@Query("""
-	SELECT p FROM Product p
-	WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', TRIM(:query), '%'))
-	OR LOWER(p.brand) LIKE LOWER(CONCAT('%', TRIM(:query), '%'))
-	OR LOWER(p.category) LIKE LOWER(CONCAT('%', TRIM(:query), '%'))
-	OR LOWER(p.tags) LIKE LOWER(CONCAT('%', TRIM(:query), '%'))
-	""")
-List<Product> searchProducts(@Param("query") String query);
+		SELECT p FROM Product p
+		WHERE LOWER(COALESCE(p.name, '')) LIKE CONCAT('%', LOWER(:query), '%')
+		OR LOWER(COALESCE(p.brand, '')) LIKE CONCAT('%', LOWER(:query), '%')
+		OR LOWER(COALESCE(p.category, '')) LIKE CONCAT('%', LOWER(:query), '%')
+		OR LOWER(COALESCE(p.tags, '')) LIKE CONCAT('%', LOWER(:query), '%')
+		""")
+	List<Product> searchProducts(@Param("query") String query);
 
 	@Modifying
 	@Transactional

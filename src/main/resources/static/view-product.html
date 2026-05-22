@@ -102,7 +102,8 @@
 
     function formatMoney(value) {
       const amount = Number(value || 0);
-      return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      const hasFraction = amount % 1 !== 0;
+      return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: hasFraction ? 2 : 0, maximumFractionDigits: 2 })}`;
     }
 
     function renderRatingStars(rating) {
@@ -202,9 +203,9 @@
         }
 
         const stockEl = document.getElementById('productStock');
-        const inStock = Number(p.stock) > 0;
-        stockEl.innerText = inStock ? `In Stock` : 'Out of Stock';
-        stockEl.style.color = inStock ? 'var(--success)' : 'var(--error)';
+        const stock = Number(p.stock);
+        stockEl.innerText = stock > 0 && stock <= 5 ? `${stock} left`: stock > 0 ? 'In Stock':  'Out of Stock';
+        stockEl.style.color = stock > 0 && stock <= 5 ? 'var(--error)' : stock > 0 ? 'var(--success)' : 'var(--error-dark)';
 
         const imageEl = document.getElementById('productImage');
         imageEl.src = p.imageUrl || '/static/img/placeholder.png';
@@ -212,7 +213,7 @@
 
         const addBtn = document.getElementById('addToCartBtn');
         const updateButtonState = () => {
-          if (!inStock) {
+          if (stock === 0) {
             addBtn.disabled = true;
             addBtn.innerText = 'Out of Stock';
             return;

@@ -20,6 +20,7 @@
         .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
         .tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
         @media (max-width: 900px) { .charts-row, .tables-row { grid-template-columns: 1fr; } }
+        @media print { body { background: white; } .no-print { display: none !important; } #reportContent { box-shadow: none; border: none; } }
         .search-report-input { padding: 0.5rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border); width: 250px; }
         .status-badge { padding: 0.25rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
         .status-paid { background: #dcfce7; color: #166534; }
