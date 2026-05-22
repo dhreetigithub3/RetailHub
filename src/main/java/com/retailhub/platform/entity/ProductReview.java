@@ -45,11 +45,6 @@ public class ProductReview {
     @Column(nullable = false)
     private String moderationStatus = "PUBLISHED";
 
-
-    @Column(length = 1000)
-    private String flaggedReason;
-
-
     public ProductReview() {
     }
 
@@ -93,16 +88,9 @@ public LocalDateTime getCreatedAt() {
         return moderationStatus;
     }
 
-    public String getFlaggedReason() {
-        return flaggedReason;
-    }
 
     public void setModerationStatus(String moderationStatus) {
         this.moderationStatus = moderationStatus;
-    }
-
-    public void setFlaggedReason(String flaggedReason) {
-        this.flaggedReason = flaggedReason;
     }
 
     public void setRating(Integer rating) {

@@ -12,8 +12,7 @@ public record ReviewResponse(
         Integer rating,
         String comment,
         LocalDateTime reviewedAt,
-        String moderationStatus,
-        String flaggedReason) {
+        String moderationStatus) {
 }
 
 

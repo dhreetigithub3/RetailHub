@@ -151,8 +151,7 @@ public class ReviewService {
                 review.getRating(),
                 review.getComment(),
                 review.getCreatedAt(),
-                review.getModerationStatus(),
-                review.getFlaggedReason());
+                review.getModerationStatus());
 
     }
 

@@ -26,7 +26,7 @@
       <h2>Create Account</h2>
       <p class="muted">Join RetailHub and start shopping today.</p>
       
-      <form id="signupForm">
+      <form id="signupForm" novalidate>
         <div class="form-group">
           <label for="name">Full Name</label>
           <input type="text" id="name" placeholder="John Doe" required />
@@ -45,7 +45,7 @@
           <input type="password" id="password" placeholder="••••••••" required oninput="checkPassword()"/>
           <small id="passwordError" style="color:red;font-size:12px;"></small>
         </div>
-        <button id="btnSubmit" type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+        <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
       </form>
       
       <p id="message" style="margin-top: 1rem;"></p>
@@ -64,56 +64,63 @@
   <script src="/js/navbar.js"></script>
   <script src="/js/auth.js"></script>
   <script>
-    btnSubmit = document.getElementById('btnSubmit');
-    btnSubmit.addEventListener('click', function(event) {
-      event.preventDefault();
-      const usernameError = document.getElementById('usernameError').textContent;
-      const passwordError = document.getElementById('passwordError').textContent;
-      
-      if (usernameError || passwordError) {
-        document.getElementById('message').textContent = "Please fix the errors before submitting.";
-        document.getElementById('message').style.color = "red";
-        return;
-      }
-    });
+    const form = document.getElementById('signupForm');
+    const usernameInput = document.getElementById('username');
+    const usernameError = document.getElementById('usernameError');
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+    const messageEl = document.getElementById('message');
 
-    u = document.getElementById('username');
-    ue = document.getElementById('usernameError');
+    if (form) {
+      form.addEventListener('submit', function(event) {
+        checkUsername();
+        checkPassword();
+
+        const hasUsernameError = usernameError.textContent.trim() !== '';
+        const hasPasswordError = passwordError.textContent.trim() !== '';
+
+        if (hasUsernameError || hasPasswordError) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          messageEl.textContent = 'Please fix the errors before submitting.';
+          messageEl.style.color = 'red';
+        }
+      });
+    }
+
     function checkUsername() {
-      const username = u.value;
+      const username = usernameInput.value.trim();
+
       if (username.length < 6) {
-        ue.textContent = "Username must be at least 6 characters";
+        usernameError.textContent = 'Username must be at least 6 characters';
       } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-        ue.textContent = "Username can only contain letters, numbers, and underscores";
+        usernameError.textContent = 'Username can only contain letters, numbers, and underscores';
       } else {
-        ue.textContent = "";
+        usernameError.textContent = '';
       }
     }
-    
-    p = document.getElementById('password');
-    pe = document.getElementById('passwordError');
 
     function checkPassword() {
-      const password = p.value;
+      const password = passwordInput.value;
       const errors = [];
-      
+
       if (password.length < 6) {
-        errors.push("At least 6 characters");
+        errors.push('6+ characters');
       }
       if (!/[A-Z]/.test(password)) {
-        errors.push("At least one uppercase letter");
+        errors.push('uppercase');
       }
       if (!/[a-z]/.test(password)) {
-        errors.push("At least one lowercase letter");
+        errors.push('lowercase');
       }
       if (!/[0-9]/.test(password)) {
-        errors.push("At least one number");
+        errors.push('number');
       }
       if (!/[@$!%*&]/.test(password)) {
-        errors.push("At least one special character (@$!%*&)");
+        errors.push('special character');
       }
-      
-      pe.textContent = errors.length > 0 ? "Must contain: " + errors.join(", ") : "";
+
+      passwordError.textContent = errors.length > 0 ? 'Must contain: ' + errors.join(', ') : '';
     }
   </script>
 </body>
