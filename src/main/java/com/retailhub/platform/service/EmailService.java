@@ -1,17 +1,17 @@
 package com.retailhub.platform.service;
 
-import java.io.UnsupportedEncodingException;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.List;  
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.retailhub.platform.entity.OrderItem;
 import com.retailhub.platform.entity.PurchaseOrder;
@@ -19,12 +19,11 @@ import com.retailhub.platform.entity.PurchaseOrder;
 @Service
 public class EmailService {
 
-    private final JavaMailSender mailSender;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
+    @Value("${brevo.api.key}")
+    private String apiKey;
 
     @Value("${app.brand.name:RetailHub}")
     private String brandName;
@@ -32,9 +31,11 @@ public class EmailService {
     @Value("${app.brand.supportEmail:retailhub052026@gmail.com}")
     private String supportEmail;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private final RestTemplate restTemplate;
+
+    public EmailService(RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+}
 
     @Async
     public void sendOrderPlaced(PurchaseOrder order, List<OrderItem> items) {
@@ -82,15 +83,36 @@ public class EmailService {
     }
 
     private void sendHtml(String to, String subject, String html) {
+
+        String url = "https://api.brevo.com/v3/smtp/email";
+
+        Map<String, Object> body = new HashMap<>();
+
+        // sender
+        Map<String, String> sender = new HashMap<>();
+        sender.put("name", "RetailHub");
+        sender.put("email", supportEmail); // or fromEmail
+
+        // recipient
+        Map<String, String> recipient = new HashMap<>();
+        recipient.put("email", to);
+
+        body.put("sender", sender);
+        body.put("to", List.of(recipient));
+        body.put("subject", subject);
+        body.put("htmlContent", html);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        headers.set("api-key", apiKey);
+
+        HttpEntity<Map<String, Object>> entity =
+                new HttpEntity<>(body, headers);
+
         try {
-            MimeMessage msg = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(msg, "utf-8");
-            helper.setFrom(fromEmail, "RetailHub");
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(html, true);
-            mailSender.send(msg);
-        } catch (MessagingException | UnsupportedEncodingException e) {
+            restTemplate.postForEntity(url, entity, String.class);
+        } catch (Exception e) {
             System.err.println("Failed to send email to " + to + ": " + e.getMessage());
         }
     }

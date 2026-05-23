@@ -2,14 +2,18 @@ package com.retailhub.platform.service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.retailhub.platform.dto.ResetPasswordRequest;
 import com.retailhub.platform.entity.User;
@@ -18,18 +22,25 @@ import com.retailhub.platform.repository.UserRepository;
 @Service
 public class OtpService {
 
-    private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecureRandom secureRandom = new SecureRandom();
 
     private final Map<String, OtpData> otpStorage = new ConcurrentHashMap<>();
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
+    @Value("${brevo.api.key}")
+    private String apiKey;
 
-    public OtpService(JavaMailSender javaMailSender, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.javaMailSender = javaMailSender;
+    @Value("${app.brand.name:RetailHub}")
+    private String brandName;
+
+    @Value("${app.brand.supportEmail:retailhub052026@gmail.com}")
+    private String supportEmail;
+
+    private final RestTemplate restTemplate;
+
+    public OtpService(RestTemplate restTemplate, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.restTemplate = restTemplate;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -44,21 +55,45 @@ public class OtpService {
                 toEmail,
                 new OtpData(otp, LocalDateTime.now().plusMinutes(5)));
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(toEmail);
-        message.setSubject("OTP Verification - RetailHub");
-        message.setText(
-                "Hi,\n\n" +
-                        "Greetings from RetailHub!\n\n" +
-                        "Use this OTP to verify your email address: " + otp + "\n\n" +
-                        "This OTP is valid for 5 minutes.\n\n" +
-                        "Do not share OTP with anyone.\n\n" +
-                        "If you did not request this OTP, please ignore this email.\n\n" +
-                        "Thank you.\n\n" +
-                        "RetailHub Team");
+        String url = "https://api.brevo.com/v3/smtp/email";
 
-        javaMailSender.send(message);
+        Map<String, Object> body = new HashMap<>();
+
+        Map<String, String> sender = new HashMap<>();
+        sender.put("name", brandName);
+        sender.put("email", supportEmail);
+
+        Map<String, String> recipient = new HashMap<>();
+        recipient.put("email", toEmail);
+
+        body.put("sender", sender);
+        body.put("to", List.of(recipient));
+        body.put("subject", "OTP Verification - " + brandName);
+
+        String html = """
+                <h2>OTP Verification - RetailHub</h2>
+                <p>Hello,</p>
+                <p>Your OTP is:</p>
+                <h1 style="color:#2d6cdf">%s</h1>
+                <p>This OTP is valid for 5 minutes.</p>
+                <p>Do not share it with anyone.</p>
+                """.formatted(otp);
+
+        body.put("htmlContent", html);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        HttpEntity<Map<String, Object>> request =
+                new HttpEntity<>(body, headers);
+
+        try {
+            restTemplate.postForEntity(url, request, String.class);
+        } catch (Exception e) {
+            System.err.println("OTP email failed: " + e.getMessage());
+        }
+
 
         System.out.println("OTP sent to: " + toEmail);
         System.out.println("Generated OTP: " + otp);
