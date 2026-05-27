@@ -57,7 +57,7 @@ It provides complete customer and admin workflows including authentication, prod
 ## Tools & Integrations
 
 * Razorpay
-* Java Mail Sender
+* Brevo Mail
 * Docker
 * Maven
 
