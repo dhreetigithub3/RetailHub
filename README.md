@@ -247,6 +247,7 @@ RetailHub uses:
 * JWT Authentication
 * Password Encryption
 * Role-based Authorization
+* OTP Based Password Reset
 * Secure REST APIs
 
 ---
